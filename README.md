@@ -1,184 +1,80 @@
----
-page_type: sample
-languages:
-- cpp
-- csharp
-- java
-- javascript
-- nodejs
-- objc
-- python
-- swift
-name: "Microsoft Cognitive Services Speech SDK Samples"
-description: "Learn how to use the Microsoft Cognitive Services Speech SDK to add speech-enabled features to your apps."
-products:
-- azure
-- azure-cognitive-services
----
+# Instructions to run Microsoft Azure TTS Talking Avatar sample code
 
-# Sample Repository for the Microsoft Cognitive Services Speech SDK
+## Basic Sample
 
-This project hosts the **samples** for the Microsoft Cognitive Services Speech SDK. To find out more about the Microsoft Cognitive Services Speech SDK itself, please visit the [SDK documentation site](https://aka.ms/csspeech).
+This sample demonstrates the basic usage of Azure text-to-speech avatar real-time API.
 
-## News
+* Step 1: Run the sample code by opening basic.html in a browser.
 
-Please check [here](https://aka.ms/csspeech/whatsnew) for release notes and older releases.
+* Step 2: Fill or select below information:
+    * Azure Speech Resource
+        * Region - the region of your Azure speech resource.
+        * Subscription Key - the subscription key of your Azure speech resource.
+    * ICE Server
+        * URL - the ICE server URL for WebRTC. e.g. `turn:relay.communication.microsoft.com:3478`. You can get the ICE server from ACS ([Azure Communication Services](https://learn.microsoft.com/azure/communication-services/overview)): you need follow [Create communication resource](https://learn.microsoft.com/azure/communication-services/quickstarts/create-communication-resource?tabs=windows&pivots=platform-azp) to create ACS resource, and then follow [Getting the relay configuration](https://learn.microsoft.com/azure/communication-services/quickstarts/relay-token?pivots=programming-language-python#getting-the-relay-configuration) to get ICE server URL, ICE server username, and ICE server credential. For ICE server URL, please make sure to use prefix `turn:`, instead of `stun:`.
+        * IceServerUsername - the username of the ICE server, which is provided together with the ICE server URL (see above).
+        * IceServerCredential - the credential (password) of the ICE server, which is provided together with the ICE server URL (see above).
+    * TTS Configuration
+        * TTS Voice - the voice of the TTS. Here is the [available TTS voices list](https://learn.microsoft.com/azure/ai-services/speech-service/language-support?tabs=tts#supported-languages)
+        * Custom Voice Deployment ID (Endpoint ID) - the deployment ID (also called endpoint ID) of your custom voice. If you are not using a custom voice, please leave it empty.
+    * Avatar Configuration
+        * Avatar Character - The character of the avatar. By default it's `lisa`, and you can update this value to use a different avatar.
+        * Avatar Style - The style of the avatar. You can update this value to use a different avatar style. This parameter is optional for custom avatar.
+        * Background Color - The color of the avatar background.
+        * Custom Avatar - Check this if you are using a custom avatar.
+        * Transparent Background - Check this if you want to use transparent background for the avatar. When this is checked, the background color of the video stream from server side is automatically set to green(#00FF00FF), and the js code on client side (check the `makeBackgroundTransparent` function in main.js) will do the real-time matting by replacing the green color with transparent color.
+        * Video Crop - By checking this, you can crop the video stream from server side to a smaller size. This is useful when you want to put the avatar video into a customized rectangle area.
 
-## Features
+* Step 3: Click `Start Session` button to setup video connection with Azure TTS Talking Avatar service. If everything goes well, you should see a live video with an avatar being shown on the web page.
 
-This repository hosts samples that help you to get started with several features of the SDK.
-In addition more complex scenarios are included to give you a head-start on using speech technology in your application.
+* Step 4: Type some text in the `Spoken Text` text box and click `Speak` button to send the text to Azure TTS Talking Avatar service. The service will synthesize the text to talking avatar video, and send the video stream back to the browser. The browser will play the video stream. You should see the avatar speaking the text you typed with mouth movement, and hear the voice which is synchronized with the mouth movement.
 
-We tested the samples with the latest released version of the SDK on Windows 10, Linux (on [supported Linux distributions and target architectures](https://docs.microsoft.com/azure/cognitive-services/speech-service/speech-sdk?tabs=linux)), Android devices (API 23: Android 6.0 Marshmallow or higher), Mac x64 (OS version 10.14 or higher) and Mac M1 arm64 (OS version 11.0 or higher) and iOS 11.4 devices.
+* Step 5: You can either continue to type text in the `Spoken Text` text box and let the avatar speak that text by clicking `Speak` button, or click `Stop Session` button to stop the video connection with Azure TTS Talking Avatar service. If you click `Stop Session` button, you can click `Start Session` button to start a new video connection with Azure TTS Talking Avatar service.
 
-## Getting Started
+## Chat Sample
 
-The [SDK documentation](https://aka.ms/csspeech) has extensive sections about getting started, setting up the SDK, as well as the process to acquire the required subscription keys. You will need subscription keys to run the samples on your machines, you therefore should follow the instructions on these pages before continuing.
+This sample demonstrates the chat scenario, with integration of Azure speech-to-text, Azure OpenAI, and Azure text-to-speech avatar real-time API.
 
-## Get the samples
+* Step 1: Run the sample code by opening chat.html in a browser.
 
-* The easiest way to use these samples without using Git is to download the current version as a [ZIP file](https://github.com/Azure-Samples/cognitive-services-speech-sdk/archive/master.zip).
+* Step 2: Fill or select below information:
+    * Azure Speech Resource
+        * Region - the region of your Azure speech resource.
+        * Subscription Key - the subscription key of your Azure speech resource.
+    * Azure OpenAI Resource
+        * Endpoint - the endpoint of your Azure OpenAI resource, e.g. https://your-openai-resource-name.openai.azure.com/, which can be found in the `Keys and Endpoint` section of your Azure OpenAI resource in Azure portal.
+        * API Key - the API key of your Azure OpenAI resource, which can be found in the `Keys and Endpoint` section of your Azure OpenAI resource in Azure portal.
+        * Deployment Name - the name of your Azure OpenAI model deployment, which can be found in the `Model deployments` section of your Azure OpenAI resource in Azure portal.
+        * System Prompt - you can edit this text to preset the context for the chat API. The chat API will then generate the response based on this context.
+        * Enable BYOD (Bring Your Own Data) - check this if you want to use your own data to constrain the chat. If you check this, you need to fill `Azure Cognitive Search Resource` section below.
+    * Azure Cognitive Search Resource - if you want to constrain the chat within your own data, please follow [Quickstart: Chat with Azure OpenAI models using your own data](https://learn.microsoft.com/azure/cognitive-services/openai/use-your-data-quickstart?pivots=programming-language-studio) to create your data source, and then fill below information:
+        * Endpoint - the endpoint of your Azure Cognitive Search resource, e.g. https://your-cogsearch-resource-name.search.windows.net/, which can be found in the `Overview` section of your Azure Cognitive Search resource in Azure portal, appearing at `Essentials -> Url` field.
+        * API Key - the API key of your Azure Cognitive Search resource, which can be found in the `Keys` section of your Azure Cognitive Search resource in Azure portal. Please make sure to use the `Admin Key` instead of `Query Key`.
+        * Index Name - the name of your Azure Cognitive Search index, which can be found in the `Indexes` section of your Azure Cognitive Search resource in Azure portal.
+    * ICE Server
+        * URL - the ICE server URL for WebRTC. e.g. `turn:relay.communication.microsoft.com:3478`. You can get the ICE server from ACS ([Azure Communication Services](https://learn.microsoft.com/azure/communication-services/overview)): you need follow [Create communication resource](https://learn.microsoft.com/azure/communication-services/quickstarts/create-communication-resource?tabs=windows&pivots=platform-azp) to create ACS resource, and then follow [Getting the relay configuration](https://learn.microsoft.com/azure/communication-services/quickstarts/relay-token?pivots=programming-language-python#getting-the-relay-configuration) to get ICE server URL, ICE server username, and ICE server credential. For ICE server URL, please make sure to use prefix `turn:`, instead of `stun:`.
+        * IceServerUsername - the username of the ICE server, which is provided together with the ICE server URL (see above).
+        * IceServerCredential - the credential (password) of the ICE server, which is provided together with the ICE server URL (see above).
+    * STT / TTS Configuration
+        * STT Locale(s) - the locale(s) of the STT. Here is the [available STT languages list](https://learn.microsoft.com/azure/ai-services/speech-service/language-support?tabs=stt#supported-languages). If multiple locales are specified, the STT will enable multi-language recognition, which means the STT will recognize the speech in any of the specified locales.
+        * TTS Voice - the voice of the TTS. Here is the [available TTS voices list](https://learn.microsoft.com/azure/ai-services/speech-service/language-support?tabs=tts#supported-languages)
+        * Custom Voice Deployment ID (Endpoint ID) - the deployment ID (also called endpoint ID) of your custom voice. If you are not using a custom voice, please leave it empty.
+        * Continuous Conversation - check this if you want to enable continuous conversation. If this is checked, the STT will keep listening to your speech, with microphone always on until you click `Stop Microphone` button. If this is not checked, the microphone will automatically stop once an utterance is recognized, and you need click `Start Microphone` every time before you give a speech. The `Continuous Conversation` mode is suitable for quiet environment, while the `Non-Continuous Conversation` mode is suitable for noisy environment, which can avoid the noise being recorded while you are not speaking.
+    * Avatar Configuration
+        * Avatar Character - The character of the avatar. By default it's `lisa`, and you can update this value to use a different avatar.
+        * Avatar Style - The style of the avatar. You can update this value to use a different avatar style. This parameter is optional for custom avatar.
+        * Custom Avatar - Check this if you are using a custom avatar.
+        * Auto Reconnect - Check this if you want to enable auto reconnect. If this is checked, the avatar video stream is automatically reconnected once the connection is lost.
+        * Use Local Video for Idle - Check this if you want to use local video for idle part. If this is checked, the avatar video stream is replaced by local video when the avatar is idle. To use this feature, you need to prepare a local video file. Usually, you can record a video of the avatar doing idle action. [Here](https://ttspublic.blob.core.windows.net/sampledata/video/avatar/lisa-casual-sitting-idle.mp4) is a sample video for lisa-casual-sitting avatar idle status. You can download it and put it to `video/lisa-casual-sitting-idle.mp4` under the same folder of `chat.html`.
 
-  * On Windows, before you unzip the archive, right-click it, select **Properties**, and then select **Unblock**.
-  * Be sure to unzip the entire archive, and not just individual samples.
+* Step 3: Click `Open Avatar Session` button to setup video connection with Azure TTS Talking Avatar service. If everything goes well, you should see a live video with an avatar being shown on the web page.
 
-* Clone this sample repository using a Git client.
+* Step 4: Click `Start Microphone` button to start microphone (make sure to allow the microphone access tip box popping up in the browser), and then you can start chatting with the avatar with speech. The chat history (the text of what you said, and the response text by the Azure OpenAI chat API) will be shown beside the avatar. The avatar will then speak out the response of the chat API.
 
-## Build and run the samples
+# Additional Tip(s)
 
-> **Note: the samples make use of the Microsoft Cognitive Services Speech SDK.
-> By downloading the Microsoft Cognitive Services Speech SDK, you acknowledge its license, see [Speech SDK license agreement](https://aka.ms/csspeech/license).**
+* If you want to enforce the avatar to stop speaking before the avatar finishes the utterance, you can click `Stop Speaking` button. This is useful when you want to interrupt the avatar speaking.
 
-Please see the description of each individual sample for instructions on how to build and run it.
+* If you want to clear the chat history and start a new round of chat, you can click `Clear Chat History` button. And if you want to stop the avatar service, please click `Close Avatar Session` button to close the connection with avatar service.
 
-## Related GitHub repositories
-
-* [Azure-Samples/Cognitive-Services-Voice-Assistant](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant) - Additional samples and tools to help you build an application that uses Speech SDK's DialogServiceConnector for voice communication with your [Bot-Framework bot](https://dev.botframework.com/) or [Custom Command](https://docs.microsoft.com/azure/cognitive-services/speech-service/custom-commands) web application.
-
-* [microsoft/cognitive-services-speech-sdk-js](https://github.com/microsoft/cognitive-services-speech-sdk-js) - JavaScript implementation of Speech SDK
-
-* [Microsoft/cognitive-services-speech-sdk-go](https://github.com/Microsoft/cognitive-services-speech-sdk-go) - Go implementation of Speech SDK
-
-* [Azure-Samples/Speech-Service-Actions-Template](https://github.com/Azure-Samples/Speech-Service-Actions-Template) - Template to create a repository to develop Azure Custom Speech models with built-in support for DevOps and common software engineering practices
-
-### Speech recognition quickstarts
-
-The following quickstarts demonstrate how to perform one-shot speech recognition using a microphone.
-If you want to build them from scratch, please follow the quickstart or basics articles on our [documentation page](https://aka.ms/csspeech).
-
-| Quickstart | Platform | Description |
-| ---------- | -------- | ----------- |
-| [Quickstart C++ for Linux](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/cpp/linux/from-microphone) | Linux | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart C++ for Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/cpp/windows/from-microphone) | Windows  | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart C++ for macOS](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/cpp/macos/from-microphone) | macOS |  | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart C# .NET for Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/csharp/dotnet/from-microphone) | Windows | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart C# .NET Core](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/csharp/dotnetcore/from-microphone) | Windows, Linux, macOS | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart C# UWP for Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/csharp/uwp/from-microphone) | Windows | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart C# Unity (Windows or Android)](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/csharp/unity/from-microphone) | Windows, Android | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart for Android](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/java/android/from-microphone) | Android  | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart Java JRE](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/java/jre/from-microphone) | Windows, Linux, macOS | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart JavaScript](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/javascript/browser) | Web | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart Node.js](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/javascript/node) | Node.js | Demonstrates one-shot speech recognition from a file. |
-| [Quickstart Python](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/python/from-microphone) | Windows, Linux, macOS | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart Objective-C iOS](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/objectivec/ios/from-microphone) | iOS | Demonstrates one-shot speech recognition from a file with recorded speech. |
-| [Quickstart Swift iOS](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/swift/ios/from-microphone) | iOS | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart Objective-C macOS](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/objectivec/macos/from-microphone) | macOS | Demonstrates one-shot speech recognition from a microphone. |
-| [Quickstart Swift macOS](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/swift/macos/from-microphone) | macOS | Demonstrates one-shot speech recognition from a microphone. |
-
-### Speech translation quickstarts
-
-The following quickstarts demonstrate how to perform one-shot speech translation using a microphone.
-If you want to build them from scratch, please follow the quickstart or basics articles on our [documentation page](https://aka.ms/csspeech).
-
-| Quickstart | Platform | Description |
-| ---------- | -------- | ----------- |
-| [Quickstart C++ for Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/cpp/windows/translate-speech-to-text) | Windows | Demonstrates one-shot speech translation/transcription from a microphone. |
-| [Quickstart C# .NET Framework for Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/csharp/dotnet/translate-speech-to-text) | Windows | Demonstrates one-shot speech translation/transcription from a microphone. |
-| [Quickstart C# .NET Core](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/csharp/dotnetcore/translate-speech-to-text) | Windows, Linux, macOS | Demonstrates one-shot speech translation/transcription from a microphone. |
-| [Quickstart C# UWP for Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/csharp/uwp/translate-speech-to-text) | Windows | Demonstrates one-shot speech translation/transcription from a microphone. |
-| [Quickstart Java JRE](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/java/jre/translate-speech-to-text) | Windows, Linux, macOS | Demonstrates one-shot speech translation/transcription from a microphone. |
-
-### Speech synthesis quickstarts
-
-The following quickstarts demonstrate how to perform one-shot speech synthesis to a speaker.
-If you want to build them from scratch, please follow the quickstart or basics articles on our [documentation page](https://aka.ms/csspeech).
-
-| Quickstart | Platform | Description |
-| ---------- | -------- | ----------- |
-| [Quickstart C++ for Linux](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/cpp/linux/text-to-speech) | Linux | Demonstrates one-shot speech synthesis to the default speaker. |
-| [Quickstart C++ for Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/cpp/windows/text-to-speech) | Windows  | Demonstrates one-shot speech synthesis to the default speaker. |
-| [Quickstart C++ for macOS](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/cpp/macos/text-to-speech) | macOS | Demonstrates one-shot speech synthesis to the default speaker. |
-| [Quickstart C# .NET for Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/csharp/dotnet/text-to-speech) | Windows | Demonstrates one-shot speech synthesis to the default speaker. |
-| [Quickstart C# UWP for Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/csharp/uwp/text-to-speech) | Windows | Demonstrates one-shot speech synthesis to the default speaker. |
-| [Quickstart C# .NET Core](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/csharp/dotnetcore/text-to-speech) | Windows, Linux | Demonstrates one-shot speech synthesis to the default speaker. |
-| [Quickstart for C# Unity (Windows or Android)](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/csharp/unity/text-to-speech) | Windows, Android | Demonstrates one-shot speech synthesis to a synthesis result and then rendering to the default speaker. |
-| [Quickstart for Android](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/java/android/text-to-speech) | Android | Demonstrates one-shot speech synthesis to the default speaker. |
-| [Quickstart Java JRE](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/java/jre/text-to-speech) | Windows, Linux, macOS | Demonstrates one-shot speech synthesis to the default speaker. |
-| [Quickstart Python](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/python/text-to-speech) | Windows, Linux, macOS | Demonstrates one-shot speech synthesis to the default speaker. |
-| [Quickstart Objective-C iOS](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/objectivec/ios/text-to-speech) | iOS | Demonstrates one-shot speech synthesis to a synthesis result and then rendering to the default speaker. |
-| [Quickstart Swift iOS](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/swift/ios/text-to-speech) | iOS | Demonstrates one-shot speech synthesis to the default speaker. |
-| [Quickstart Objective-C macOS](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/objectivec/macos/text-to-speech) | macOS | Demonstrates one-shot speech synthesis to the default speaker. |
-| [Quickstart Swift macOS](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/swift/macos/text-to-speech) | macOS | Demonstrates one-shot speech synthesis to the default speaker. |
-
-### Voice Assistant quickstarts
-
-The following quickstarts demonstrate how to create a custom Voice Assistant.
-The applications will connect to a previously authored bot configured to use the Direct Line Speech channel, send a voice request, and return a voice response activity (if configured).
-If you want to build these quickstarts from scratch, please follow the quickstart or basics articles on our [documentation page](https://docs.microsoft.com/azure/cognitive-services/speech-service/index-voice-assistants).
-
-See also [Azure-Samples/Cognitive-Services-Voice-Assistant](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant) for full Voice Assistant samples and tools.
-
-<br>
-
-| Quickstart | Platform | Description |
-| ---------- | -------- | ----------- |
-| [Quickstart Java JRE](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/java/jre/virtual-assistant) | Windows, Linux, macOS | Demonstrates speech recognition through the DialogServiceConnector and receiving activity responses. |
-| [Quickstart C# UWP for Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/quickstart/csharp/uwp/virtual-assistant) | Windows | Demonstrates speech recognition through the DialogServiceConnector and receiving activity responses. |
-
-### Samples
-
-The following samples demonstrate additional capabilities of the Speech SDK, such as additional modes of speech recognition as well as intent recognition and translation. Voice Assistant samples can be found in a [separate GitHub repo](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant).
-
-| Sample                                                                                                      | Platform | Description                                                          |
-| ---                                                                                                         | ---      | ---                                                                  |
-| [C++ Console app for Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/cpp/windows/console)                                                | Windows  | Demonstrates speech recognition, speech synthesis, intent recognition, conversation transcription and translation |
-| [C++ Speech Recognition from MP3/Opus file (Linux only)](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/cpp/linux/compressed-audio-input)        | Linux    | Demonstrates speech recognition from an MP3/Opus file |
-| [C# Console app for .NET Framework on Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/csharp/dotnet-windows/console)                     | Windows  | Demonstrates speech recognition, speech synthesis, intent recognition, and translation |
-| [C# Console app for .NET Core (Windows or Linux)](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/csharp/dotnetcore/console)                      | Windows, Linux, macOS  | Demonstrates speech recognition, speech synthesis, intent recognition, and translation |
-| [Java Console app for JRE](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/java/jre/console)                                                      | Windows, Linux, macOS | Demonstrates speech recognition, speech synthesis, intent recognition, and translation |
-| [Python Console app](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/python/console)                                                              | Windows, Linux, macOS  | Demonstrates speech recognition, speech synthesis, intent recognition, and translation |
-| [Speech-to-text UWP sample](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/csharp/uwp/speechtotext-uwp)                                          | Windows  | Demonstrates speech recognition |
-| [Text-to-speech UWP sample](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/csharp/uwp/texttospeech-uwp)                                          | Windows  | Demonstrates speech synthesis |
-| [Speech recognition sample for Android](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/java/android/sdkdemo/)                                     | Android  | Demonstrates speech and intent recognition |
-| [Speech recognition, synthesis, and translation sample for the browser, using JavaScript](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/js/browser/)         | Web      | Demonstrates speech recognition, intent recognition, and translation |
-| [Speech recognition and translation sample using JavaScript and Node.js](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/js/node)                 | Node.js  | Demonstrates speech recognition, intent recognition, and translation |
-| [Speech recognition sample for iOS using a connection object](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/objective-c/ios)  | iOS      | Demonstrates speech recognition |
-| [Extended speech recognition sample for iOS](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/objective-c/ios)           | iOS      | Demonstrates speech recognition using streams etc.|
-| [Speech synthesis sample for iOS](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/objective-c/ios)           | iOS      | Demonstrates speech synthesis using streams etc.|
-| [C# UWP DialogServiceConnector sample for Windows](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/csharp/uwp/virtualassistant-uwp/) | Windows | Demonstrates speech recognition through the DialogServiceConnector and receiving activity responses. |
-| [C# Unity sample for Windows or Android](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/unity/speechrecognizer/) | Windows, Android |  Demonstrates speech recognition, intent recognition, and translation for Unity |
-| [C# Unity SpeechBotConnector sample for Windows or Android](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/csharp/unity/VirtualAssistantPreview/) | Windows, Android | Demonstrates speech recognition through the SpeechBotConnector and receiving activity responses. |
-| [C#, C++ and Java DialogServiceConnector samples](https://github.com/Azure-Samples/Cognitive-Services-Voice-Assistant) | Windows, Linux, Android | Additional samples and tools to help you build an application that uses Speech SDK's DialogServiceConnector for voice communication with your [Bot-Framework Bot](https://dev.botframework.com/) or [Custom Command](https://docs.microsoft.com/azure/cognitive-services/speech-service/custom-commands) web application. |
-
-Samples for using the Speech Service REST API (no Speech SDK installation required):
-
-| Sample                                  | Description |
-| ---                                     | --- |
-| [Batch transcription](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/batch/)  | Demonstrates usage of batch transcription from different programming languages |
-| [Batch synthesis](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/batch-synthesis/)  | Demonstrates usage of batch synthesis from different programming languages |
-| [Custom voice](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/samples/custom-voice/)  | Demonstrates usage of custom voice from different programming languages |
-
-## Tools
-
-| Tool | Platform | Description |
-| ---- | -------- | ----------- |
-| Enumerate audio devices | C++, Windows | Shows how to get the Device ID of all connected microphones and loudspeakers. Device ID is required if you want to listen via non-default microphone (Speech Recognition), or play to a non-default loudspeaker (Text-To-Speech) using Speech SDK |
-| Enumerate audio devices | C# .NET Framework, Windows | -"- |
-
-## Sample data for Custom Speech
-
-- [Sample data for Custom Speech](https://github.com/Azure-Samples/cognitive-services-speech-sdk/tree/master/sampledata/customspeech)
-
-## Resources
-
-- [Microsoft Cognitive Services Speech Service and SDK Documentation](https://aka.ms/csspeech)
+* If you want to type your query message instead of speaking, you can check the `Type Message` checkbox, and then type your query message in the text box showing up below the checkbox.
